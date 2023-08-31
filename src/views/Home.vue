@@ -1,35 +1,17 @@
 <template>
-    <div id="app">
-      <img alt="Vue logo" src="../assets/logo.png">
-      <HelloWorld msg="Welcome to Your Vue.js App"/>
-      <NavbarStatic class="navBard"/>
-    </div>
-  </template>
+  <div class="">
+    <h1 class="tittle-page">Home</h1>
+    <hr class="tittle-hr" />
+  </div>
+</template>
   
   <script>
-  import HelloWorld from '../components/HelloWorld.vue'
-  import NavbarStatic from "../components/NavbarStatic.vue";
-  
-  export default {
-    name: 'PageHome',
-    components: {
-      HelloWorld,
-      NavbarStatic
-    }
-  }
-  </script>
+export default {
+  name: "PageHome",
+  components: {},
+};
+</script>
   
   <style>
-  #app {
-    font-family: Avenir, Helvetica, Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    text-align: center;
-    color: #2c3e50;
-    margin-top: 60px;
-  }
-  .navBard{
-    width: 300px;
-  }
-  </style>
+</style>
   

@@ -1,5 +1,10 @@
 <template>
-  <h1>Reloj</h1>
+     <div class="">
+        <h1 class="tittle-page">
+            Timer
+        </h1>
+        <hr class="tittle-hr"/>
+    </div>
 </template>
 
 <script>

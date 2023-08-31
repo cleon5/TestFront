@@ -1,58 +1,54 @@
 <template>
-  <div >
+  <div class="menu-component">
     <b-menu id="">
-      <b-menu-list label="Menu">
-        <b-menu-item icon="information-outline" label="Info"></b-menu-item>
-        <b-menu-item icon="settings" :active="isActive" expanded>
-          <template #label="props">
-            Administratorsada
-            <b-icon
-              class="is-pulled-right"
-              :icon="props.expanded ? 'menu-up' : 'menu-down'"
-            ></b-icon>
-          </template>
-          <b-menu-item icon="account" label="Users"></b-menu-item>
-          <b-menu-item icon="cellphone-link">
-            <template #label>
-              Devices
-              <b-dropdown
-                aria-role="list"
-                class="is-pulled-right"
-                position="is-bottom-left"
-              >
-                <template #trigger>
-                  <b-icon icon="dots-vertical"></b-icon>
-                </template>
-                <b-dropdown-item aria-role="listitem">Action</b-dropdown-item>
-                <b-dropdown-item aria-role="listitem"
-                  >Another action</b-dropdown-item
-                >
-                <b-dropdown-item aria-role="listitem"
-                  >Something else</b-dropdown-item
-                >
-              </b-dropdown>
-            </template>
-          </b-menu-item>
-          <b-menu-item
-            icon="cash-multiple"
-            label="Payments"
-            disabled
-          ></b-menu-item>
-        </b-menu-item>
-        <b-menu-item icon="account" label="My Account">
-          <b-menu-item label="Account data"></b-menu-item>
-          <b-menu-item label="Addresses"></b-menu-item>
-        </b-menu-item>
+      <b-menu-list label="Menu"> </b-menu-list>
+
+      <b-menu-list>
+        <b-menu-item
+          label="Home"
+          icon="link"
+          tag="router-link"
+          target=""
+          to="/"
+        ></b-menu-item>
       </b-menu-list>
       <b-menu-list>
         <b-menu-item
-          label="Expo"
+          label="Login"
           icon="link"
           tag="router-link"
-          target="_blank"
-          to="/expo"
+          target=""
+          to="/login"
         ></b-menu-item>
       </b-menu-list>
+      <b-menu-list>
+        <b-menu-item
+          label="Timer"
+          icon="link"
+          tag="router-link"
+          target=""
+          to="/reloj"
+        ></b-menu-item>
+      </b-menu-list>
+      <b-menu-list>
+        <b-menu-item
+          label="Todo List"
+          icon="link"
+          tag="router-link"
+          target=""
+          to="/todolist"
+        ></b-menu-item>
+      </b-menu-list>
+      <b-menu-list>
+        <b-menu-item
+          label="Git Profile"
+          icon="link"
+          tag="router-link"
+          target=""
+          to="/git"
+        ></b-menu-item>
+      </b-menu-list>
+
       <b-menu-list label="Actions">
         <b-menu-item label="Logout"></b-menu-item>
       </b-menu-list>
@@ -65,12 +61,16 @@ export default {
   name: "NavbarStatic",
   data() {
     return {
-      isActive: true,
+     
     };
   },
 };
 </script>
 
 <style scoped>
-
+.menu-component{
+  padding: 22px;
+  background-color: burlywood;
+  height:100vh;
+}
 </style>
