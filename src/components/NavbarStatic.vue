@@ -8,7 +8,7 @@
           icon="link"
           tag="router-link"
           target=""
-          to="/login"
+          to="/"
         ></b-menu-item>
       </b-menu-list>
       <b-menu-list>

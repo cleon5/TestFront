@@ -17,7 +17,7 @@
         >
         </b-input>
       </b-field>
-      <p class="searh-example">Ejmeplo cleon5</p>
+      <p class="searh-example">Ejemplo cleon5</p>
     </div>
 
     <div class="Profile" v-if="showProfile">
@@ -134,7 +134,7 @@ export default {
     comprobarLogin() {
       //Metodo inicial para consultar si se inicio sesion
       let user = LocalStorageGetUser();
-      !user && this.$router.push("/login");
+      !user && this.$router.push("/");
     },
     async GetUserGit() {
       //Consulta axios obtener el perfil

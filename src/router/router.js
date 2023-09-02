@@ -5,7 +5,7 @@ import TodoList from '../views/TodoList.vue'
 
 
 export default [
-  {path:"/login", component:Login},
+  {path:"/", component:Login}, //El login es la ruta base
   {path:"/git", component:GitProfile},
   {path:"/todolist", component:TodoList},
   {path:"/reloj", component:Reloj}

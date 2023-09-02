@@ -91,7 +91,8 @@ export default {
     return {
       isImageModalActive: false,
       isCardModalActive: false,
-      TmpTarea: { //obj temporal que almacena los datos de una tarea, usado para modales.
+      TmpTarea: {
+        //obj temporal que almacena los datos de una tarea, usado para modales.
         id: 0,
         title: "",
         msg: "",
@@ -119,36 +120,40 @@ export default {
   methods: {
     comprobarLogin() {
       let user = LocalStorageGetUser(); //Metodo default para conprobar login
-      !user && this.$router.push("/login");
+      !user && this.$router.push("/");
     },
-    AddTarea() { //Metodo para agregar tareas
-      if (this.TmpTarea.id != 0) { //Si la tarea tiene un id significa que se esta editando
+    AddTarea() {
+      //Metodo para agregar tareas
+      if (this.TmpTarea.id != 0) {
+        //Si la tarea tiene un id significa que se esta editando
         let index = this.List.findIndex(
           (element) => element.id == this.TmpTarea.id
         );
         console.log(index);
         this.List.splice(index, 1, Object.assign({}, this.TmpTarea));
-      } else { //Sino es una nueva tarea
+      } else {
+        //Sino es una nueva tarea
         this.TmpTarea.id = this.GetRdnId(); //Se genera un id aleatorio
-        this.List.push(Object.assign({}, this.TmpTarea)); 
+        this.List.push(Object.assign({}, this.TmpTarea));
       }
       this.isCardModalActive = false;
-      this.CleanModal(); //se cierra la modal 
+      this.CleanModal(); //se cierra la modal
       this.toastCreated(); //Se muestra el modal de tarea Guardada
     },
     DeleteTarea(id) {
       let index = this.List.findIndex((element) => element.id == id); //Se busca en base al id
       this.List.splice(index, 1);
-      console.log(index) //Se borra de la lista
+      console.log(index); //Se borra de la lista
       this.toastErr(); //Se muestra un toast
-      this.TareasOrdenadas
+      this.TareasOrdenadas;
     },
     EditTarea(id) {
-      let tareaEdict = this.List.find((element) => element.id == id);//Se busca en base al id
+      let tareaEdict = this.List.find((element) => element.id == id); //Se busca en base al id
       this.TmpTarea = tareaEdict; //Se almacena la tarea encontrada en los datos temporales de tareas
       this.isCardModalActive = true; // para que se muestre en la modal
     },
-    CleanModal() {//Metodo para limpiar modal
+    CleanModal() {
+      //Metodo para limpiar modal
       this.TmpTarea.id = null;
       this.TmpTarea.title = "";
       this.TmpTarea.msg = "";
@@ -181,13 +186,12 @@ export default {
         type: "is-success",
       });
     },
-  
   },
-  computed: { 
+  computed: {
     TareasOrdenadas() {
-      let tareasTerminadas = this.List.filter(tarea => tarea.done); //Filtra las tareas terminadas
-      let tareasFaltantes = this.List.filter(tarea => !tarea.done); //Filtra las tareas no terminadas
-      let newList = tareasTerminadas.concat(tareasFaltantes) //concatena ambos 
+      let tareasTerminadas = this.List.filter((tarea) => tarea.done); //Filtra las tareas terminadas
+      let tareasFaltantes = this.List.filter((tarea) => !tarea.done); //Filtra las tareas no terminadas
+      let newList = tareasTerminadas.concat(tareasFaltantes); //concatena ambos
       return newList;
     },
   },
@@ -196,7 +200,7 @@ export default {
 
 <style>
 .pageList {
-  background-color: rgb(92, 92, 92);
+  background-color: rgb(169, 186, 190);
 }
 .ListCards {
   display: flex;
@@ -210,7 +214,7 @@ export default {
 .card-done {
   background-color: rgb(111, 185, 102);
 }
-.btn-crear{
+.btn-crear {
   margin: 0 auto;
   width: fit-content;
   justify-content: center;

@@ -64,7 +64,7 @@ export default {
     comprobarLogin() {
       //Metodo base para consutar login
       let user = LocalStorageGetUser();
-      !user && this.$router.push("/login");
+      !user && this.$router.push("/");
     },
     IniciarContador() {
       this.calcularDuracion();
