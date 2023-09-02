@@ -32,7 +32,7 @@ export default {
   data() {
     return {
       err: false,
-      urlMocki: "https://mocki.io/v1/3e408794-39ed-4c75-bb6e-c49c578de293",
+      urlMocki: "https://mocki.io/v1/3e408794-39ed-4c75-bb6e-c49c578de293", //url para los datos
       data: {
         userName: "HMHuser",
         password: "techTest",
@@ -44,17 +44,17 @@ export default {
       let user = (await axios.get(this.urlMocki)).data;
       let passMd5 = md5(this.data.password);
 
-      user.userName == this.data.userName
+      user.userName == this.data.userName //Operacion para encontrar errores en el login
         ? user.password == passMd5
-          ? this.loginUser(user)
+          ? this.loginUser(user) //Si no hay errores se procede con el login del usuario
           : this.toastErr("Contrasena")
         : this.toastErr("Usuario");
     },
     loginUser(user) {
-      LocalStorageSetUser(user);
+      LocalStorageSetUser(user); //Se guarda el usuario en local storage
       this.toastLogin();
     },
-    toastErr(Tipo) {
+    toastErr(Tipo) { //Toast de error en datos
       this.$buefy.toast.open({
         duration: 5000,
         message: `Error en ${Tipo}`,
@@ -62,7 +62,7 @@ export default {
         type: "is-danger",
       });
     },
-    toastLogin() {
+    toastLogin() { //Toast de inicio de sesion
       this.$buefy.toast.open({
         message: "Sesion iniciada",
         type: "is-success",

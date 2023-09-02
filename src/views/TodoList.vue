@@ -5,7 +5,7 @@
       <hr class="tittle-hr" />
     </div>
     <div>
-      <div class="">
+      <div class="btn-crear">
         <b-button
           label="Nueva tarea"
           type="is-primary"
@@ -17,7 +17,7 @@
       <div class="ListCards">
         <div
           :class="tarea.done ? 'card card-style card-done' : 'card card-style '"
-          v-for="(tarea, index) in List"
+          v-for="(tarea, index) in TareasOrdenadas"
           :key="index"
         >
           <header class="card-header">
@@ -30,9 +30,9 @@
             </div>
           </div>
           <footer class="card-footer">
-            <a @click="EditTarea(tarea.id)" class="card-footer-item">Edit</a>
+            <a @click="EditTarea(tarea.id)" class="card-footer-item">Editar</a>
             <a @click="DeleteTarea(tarea.id)" class="card-footer-item"
-              >Delete</a
+              >Borrar</a
             >
           </footer>
         </div>
@@ -83,13 +83,15 @@
 </template>
 
 <script>
+import { LocalStorageGetUser } from "@/services/localStorage";
+
 export default {
   name: "TodoList",
   data() {
     return {
       isImageModalActive: false,
       isCardModalActive: false,
-      TmpTarea: {
+      TmpTarea: { //obj temporal que almacena los datos de una tarea, usado para modales.
         id: 0,
         title: "",
         msg: "",
@@ -97,28 +99,16 @@ export default {
       },
       List: [
         {
-          id: 1,
-          title: "Titulo de la tarea",
-          msg: "Mensaje de la tarea",
+          id: 1231,
+          title: "Fiesta ",
+          msg: "Fiesta con los amigos hoy a las 9",
           done: false,
         },
         {
-          id: 2,
-          title: "Titulo de la tarea2",
-          msg: "Mensaje de la tarea2",
+          id: 43,
+          title: "Sacar la basura",
+          msg: "Recuerda sacar la basura temprano",
           done: true,
-        },
-        {
-          id: 3,
-          title: "Titulo de la tarea2",
-          msg: "Mensaje de la tarea2",
-          done: false,
-        },
-        {
-          id: 4,
-          title: "Titulo de la tarea2",
-          msg: "Mensaje de la tarea2",
-          done: false,
         },
       ],
     };
@@ -127,42 +117,45 @@ export default {
     this.comprobarLogin();
   },
   methods: {
-    AddTarea() {
-      if (this.TmpTarea.id != 0) {
+    comprobarLogin() {
+      let user = LocalStorageGetUser(); //Metodo default para conprobar login
+      !user && this.$router.push("/login");
+    },
+    AddTarea() { //Metodo para agregar tareas
+      if (this.TmpTarea.id != 0) { //Si la tarea tiene un id significa que se esta editando
         let index = this.List.findIndex(
-          (element) => element.id > this.TmpTarea.id - 1
+          (element) => element.id == this.TmpTarea.id
         );
         console.log(index);
         this.List.splice(index, 1, Object.assign({}, this.TmpTarea));
-      } else {
-        this.TmpTarea.id =this.GetRdnId()
-        this.List.push(Object.assign({}, this.TmpTarea));
+      } else { //Sino es una nueva tarea
+        this.TmpTarea.id = this.GetRdnId(); //Se genera un id aleatorio
+        this.List.push(Object.assign({}, this.TmpTarea)); 
       }
       this.isCardModalActive = false;
-      this.CleanModal();
-      this.toastCreated();
+      this.CleanModal(); //se cierra la modal 
+      this.toastCreated(); //Se muestra el modal de tarea Guardada
     },
     DeleteTarea(id) {
-      console.log(id);
-      let index = this.List.findIndex((element) => element.id > id - 1);
-      console.log(index);
+      let index = this.List.findIndex((element) => element.id == id); //Se busca en base al id
       this.List.splice(index, 1);
-      this.toastErr();
+      console.log(index) //Se borra de la lista
+      this.toastErr(); //Se muestra un toast
+      this.TareasOrdenadas
     },
     EditTarea(id) {
-      console.log(id);
-      let tareaEdict = this.List.find((element) => element.id > id - 1);
-      this.TmpTarea = tareaEdict;
-      this.isCardModalActive = true;
+      let tareaEdict = this.List.find((element) => element.id == id);//Se busca en base al id
+      this.TmpTarea = tareaEdict; //Se almacena la tarea encontrada en los datos temporales de tareas
+      this.isCardModalActive = true; // para que se muestre en la modal
     },
-    CleanModal() {
+    CleanModal() {//Metodo para limpiar modal
       this.TmpTarea.id = null;
       this.TmpTarea.title = "";
       this.TmpTarea.msg = "";
       this.TmpTarea.done = false;
     },
     GetRdnId() {
-      //Cree una funcion que crea numeros aleatorios en base a la fecha actual
+      //Cree una funcion que genera numeros aleatorios en base a la fecha actual
       const fecha = new Date(); //No deberia haber numeros repetidos
       let rdn =
         fecha.getFullYear().toString() +
@@ -171,13 +164,9 @@ export default {
         fecha.getHours().toString() +
         fecha.getMinutes().toString() +
         fecha.getSeconds().toString();
-      return rdn;
+      return rdn; //retorna el numero
     },
-    comprobarLogin() {
-      let user = LocalStorageGetUser();
-      console.log(user);
-      !user && this.$router.push("/login");
-    },
+    //Toast de alerta al usuario
     toastErr() {
       this.$buefy.toast.open({
         duration: 5000,
@@ -188,9 +177,18 @@ export default {
     },
     toastCreated() {
       this.$buefy.toast.open({
-        message: "Tarea creada",
+        message: "Tarea Guardada",
         type: "is-success",
       });
+    },
+  
+  },
+  computed: { 
+    TareasOrdenadas() {
+      let tareasTerminadas = this.List.filter(tarea => tarea.done); //Filtra las tareas terminadas
+      let tareasFaltantes = this.List.filter(tarea => !tarea.done); //Filtra las tareas no terminadas
+      let newList = tareasTerminadas.concat(tareasFaltantes) //concatena ambos 
+      return newList;
     },
   },
 };
@@ -198,7 +196,7 @@ export default {
 
 <style>
 .pageList {
-  background-color: gray;
+  background-color: rgb(92, 92, 92);
 }
 .ListCards {
   display: flex;
@@ -210,6 +208,12 @@ export default {
   width: 30%;
 }
 .card-done {
-  background-color: aqua;
+  background-color: rgb(111, 185, 102);
+}
+.btn-crear{
+  margin: 0 auto;
+  width: fit-content;
+  justify-content: center;
+  margin-bottom: 30px;
 }
 </style>

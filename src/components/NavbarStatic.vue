@@ -2,16 +2,6 @@
   <div class="menu-component">
     <b-menu id="">
       <b-menu-list label="Menu"> </b-menu-list>
-
-      <b-menu-list>
-        <b-menu-item
-          label="Home"
-          icon="link"
-          tag="router-link"
-          target=""
-          to="/"
-        ></b-menu-item>
-      </b-menu-list>
       <b-menu-list>
         <b-menu-item
           label="Login"
@@ -49,7 +39,7 @@
         ></b-menu-item>
       </b-menu-list>
 
-      <b-menu-list label="Actions">
+      <b-menu-list label="Usuario">
         <b-menu-item label="Logout" @click="Logout()"></b-menu-item>
       </b-menu-list>
     </b-menu>
@@ -64,7 +54,7 @@ export default {
     return {};
   },
   methods: {
-    toastLogout() {
+    toastLogout() {  //Toast que se muestra cuando se cierra la sesion
       this.$buefy.toast.open({
         duration: 5000,
         message: `Se ha cerrado la sesion, Vuelve a iniciar`,
@@ -73,9 +63,9 @@ export default {
       });
     },
     Logout() {
-      removeLocalStorage();
+      removeLocalStorage(); //Se remueve el obj de user del local host
       this.toastLogout()
-      this.$router.push("/login");
+      this.$router.push("/login"); //Se redireciona al login
     },
   },
 };
@@ -84,7 +74,6 @@ export default {
 <style scoped>
 .menu-component {
   padding: 22px;
-  background-color: burlywood;
   height: 100vh;
 }
 </style>
