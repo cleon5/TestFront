@@ -10,24 +10,65 @@
         <h2 class="login title is-3">Inicia Sesion</h2>
 
         <b-field label="Usuario " custom-class="label-white">
-          <b-input v-model="Usuario"></b-input>
+          <b-input v-model="data.userName"></b-input>
         </b-field>
 
-        <b-field custom-class="label-white" label="Password">
-          <b-input v-model="Password"></b-input>
+        <b-field custom-class="label-white" label="Contrasena">
+          <b-input v-model="data.password"></b-input>
         </b-field>
 
-        <p class="text-danger text-center mt-3">Error en algun campo</p>
-
-        <b-button type="is-success">Success</b-button>
+        <b-button type="is-success" @click="AuthUser()">Success</b-button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import axios from "axios";
+import md5 from "md5";
+import { LocalStorageSetUser } from "../services/localStorage.js";
 export default {
   name: "LoginPage",
+  data() {
+    return {
+      err: false,
+      urlMocki: "https://mocki.io/v1/3e408794-39ed-4c75-bb6e-c49c578de293",
+      data: {
+        userName: "HMHuser",
+        password: "techTest",
+      },
+    };
+  },
+  methods: {
+    async AuthUser() {
+      let user = (await axios.get(this.urlMocki)).data;
+      let passMd5 = md5(this.data.password);
+
+      user.userName == this.data.userName
+        ? user.password == passMd5
+          ? this.loginUser(user)
+          : this.toastErr("Contrasena")
+        : this.toastErr("Usuario");
+    },
+    loginUser(user) {
+      LocalStorageSetUser(user);
+      this.toastLogin();
+    },
+    toastErr(Tipo) {
+      this.$buefy.toast.open({
+        duration: 5000,
+        message: `Error en ${Tipo}`,
+        position: "is-bottom",
+        type: "is-danger",
+      });
+    },
+    toastLogin() {
+      this.$buefy.toast.open({
+        message: "Sesion iniciada",
+        type: "is-success",
+      });
+    },
+  },
 };
 </script>
 

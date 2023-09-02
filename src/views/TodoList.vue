@@ -16,7 +16,7 @@
 
       <div class="ListCards">
         <div
-          :class="tarea.done ? 'card card-style card-done': 'card card-style '" 
+          :class="tarea.done ? 'card card-style card-done' : 'card card-style '"
           v-for="(tarea, index) in List"
           :key="index"
         >
@@ -31,7 +31,9 @@
           </div>
           <footer class="card-footer">
             <a @click="EditTarea(tarea.id)" class="card-footer-item">Edit</a>
-            <a @click="DeleteTarea(tarea.id)" class="card-footer-item">Delete</a>
+            <a @click="DeleteTarea(tarea.id)" class="card-footer-item"
+              >Delete</a
+            >
           </footer>
         </div>
       </div>
@@ -45,7 +47,12 @@
           </header>
           <section class="modal-card-body">
             <b-field label="Title">
-              <b-input type="text" v-model="TmpTarea.title"  placeholder="Title" required>
+              <b-input
+                type="text"
+                v-model="TmpTarea.title"
+                placeholder="Title"
+                required
+              >
               </b-input>
             </b-field>
 
@@ -60,7 +67,9 @@
             </b-field>
 
             <b-field>
-              <b-checkbox  v-model="TmpTarea.done" :value="false"> Terminada </b-checkbox>
+              <b-checkbox v-model="TmpTarea.done" :value="false">
+                Terminada
+              </b-checkbox>
             </b-field>
           </section>
           <footer class="modal-card-foot">
@@ -80,10 +89,11 @@ export default {
     return {
       isImageModalActive: false,
       isCardModalActive: false,
-      TmpTarea:{
-          title: "",
-          msg: "",
-          done: false,
+      TmpTarea: {
+        id: 0,
+        title: "",
+        msg: "",
+        done: false,
       },
       List: [
         {
@@ -113,21 +123,75 @@ export default {
       ],
     };
   },
+  created() {
+    this.comprobarLogin();
+  },
   methods: {
-    AddTarea(){
-        this.List.push(this.TmpTarea)
+    AddTarea() {
+      if (this.TmpTarea.id != 0) {
+        let index = this.List.findIndex(
+          (element) => element.id > this.TmpTarea.id - 1
+        );
+        console.log(index);
+        this.List.splice(index, 1, Object.assign({}, this.TmpTarea));
+      } else {
+        this.TmpTarea.id =this.GetRdnId()
+        this.List.push(Object.assign({}, this.TmpTarea));
+      }
+      this.isCardModalActive = false;
+      this.CleanModal();
+      this.toastCreated();
     },
-    DeleteTarea(id){
-        console.log(id)
-        let index = this.List.findIndex((element) => element.id > id-1);
-        console.log(index)
-        this.List.splice(index,1)
+    DeleteTarea(id) {
+      console.log(id);
+      let index = this.List.findIndex((element) => element.id > id - 1);
+      console.log(index);
+      this.List.splice(index, 1);
+      this.toastErr();
     },
-    EditTarea(id){
-        console.log(id)
-        let tareaEdict = this.List.find((element) => element.id > id-1);
-        this.TmpTarea = tareaEdict
-    }
+    EditTarea(id) {
+      console.log(id);
+      let tareaEdict = this.List.find((element) => element.id > id - 1);
+      this.TmpTarea = tareaEdict;
+      this.isCardModalActive = true;
+    },
+    CleanModal() {
+      this.TmpTarea.id = null;
+      this.TmpTarea.title = "";
+      this.TmpTarea.msg = "";
+      this.TmpTarea.done = false;
+    },
+    GetRdnId() {
+      //Cree una funcion que crea numeros aleatorios en base a la fecha actual
+      const fecha = new Date(); //No deberia haber numeros repetidos
+      let rdn =
+        fecha.getFullYear().toString() +
+        fecha.getMonth().toString() +
+        fecha.getDay().toString() +
+        fecha.getHours().toString() +
+        fecha.getMinutes().toString() +
+        fecha.getSeconds().toString();
+      return rdn;
+    },
+    comprobarLogin() {
+      let user = LocalStorageGetUser();
+      console.log(user);
+      !user && this.$router.push("/login");
+    },
+    toastErr() {
+      this.$buefy.toast.open({
+        duration: 5000,
+        message: `Tarea eliminada`,
+        position: "is-bottom",
+        type: "is-danger",
+      });
+    },
+    toastCreated() {
+      this.$buefy.toast.open({
+        message: "Tarea creada",
+        type: "is-success",
+      });
+    },
   },
 };
 </script>
@@ -145,7 +209,7 @@ export default {
   margin-bottom: 20px;
   width: 30%;
 }
-.card-done{
-    background-color: aqua;
+.card-done {
+  background-color: aqua;
 }
 </style>

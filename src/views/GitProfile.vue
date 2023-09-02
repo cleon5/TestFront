@@ -24,9 +24,22 @@
 </template>
 
 <script>
+import {LocalStorageGetUser} from "../services/localStorage.js"
+//import router from "@/router/router";
 export default {
   name: "GitProfile",
+  created(){
+    this.comprobarLogin();
+  },
+  methods:{
+    comprobarLogin(){
+      let user = LocalStorageGetUser()
+      console.log(user)
+      !user && this.$router.push("/login");
+    }
+  }
 };
+
 </script>
 
 <style>
