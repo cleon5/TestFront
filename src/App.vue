@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <Navbar class="Menu"/> //Utilice un componente menu como navbar
+    <Navbar class="Menu"/> 
     <router-view class="page"></router-view>
   </div>
 </template>
@@ -11,7 +11,7 @@ import Navbar from './components/NavbarStatic.vue'
 export default {
   name: 'App',
   components:{
-    Navbar
+    Navbar //Utilice un componente menu como navbar
   }
 
 }
