@@ -13,8 +13,6 @@ Vue.use(router)
 Vue.use(Buefy)
 Vue.config.productionTip = false
 
-//Vue.component("Navbar", NavBar)
-
 new Vue({
   render: h => h(App),
   router:rout

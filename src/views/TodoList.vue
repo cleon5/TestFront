@@ -73,7 +73,7 @@
             </b-field>
           </section>
           <footer class="modal-card-foot">
-            <b-button label="Close" @click="$parent.close()" />
+            <b-button label="Close" @click="closeModal()" />
             <b-button label="Guardar" type="is-primary" @click="AddTarea()" />
           </footer>
         </div>
@@ -89,7 +89,6 @@ export default {
   name: "TodoList",
   data() {
     return {
-      isImageModalActive: false,
       isCardModalActive: false,
       TmpTarea: {
         //obj temporal que almacena los datos de una tarea, usado para modales.
@@ -106,7 +105,7 @@ export default {
           done: false,
         },
         {
-          id: 43,
+          id: 4333,
           title: "Sacar la basura",
           msg: "Recuerda sacar la basura temprano",
           done: true,
@@ -120,7 +119,14 @@ export default {
   methods: {
     comprobarLogin() {
       let user = LocalStorageGetUser(); //Metodo default para conprobar login
-      !user && this.$router.push("/");
+      if (!user) {
+        this.toastSesion();
+        this.$router.push("/");
+      }
+    },
+    closeModal() {
+      this.isCardModalActive = false;
+      this.CleanModal();
     },
     AddTarea() {
       //Metodo para agregar tareas
@@ -129,7 +135,6 @@ export default {
         let index = this.List.findIndex(
           (element) => element.id == this.TmpTarea.id
         );
-        console.log(index);
         this.List.splice(index, 1, Object.assign({}, this.TmpTarea));
       } else {
         //Sino es una nueva tarea
@@ -142,8 +147,7 @@ export default {
     },
     DeleteTarea(id) {
       let index = this.List.findIndex((element) => element.id == id); //Se busca en base al id
-      this.List.splice(index, 1);
-      console.log(index); //Se borra de la lista
+      this.List.splice(index, 1); //Se borra de la lista
       this.toastErr(); //Se muestra un toast
       this.TareasOrdenadas;
     },
@@ -154,7 +158,7 @@ export default {
     },
     CleanModal() {
       //Metodo para limpiar modal
-      this.TmpTarea.id = null;
+      this.TmpTarea.id = 0;
       this.TmpTarea.title = "";
       this.TmpTarea.msg = "";
       this.TmpTarea.done = false;
@@ -184,6 +188,15 @@ export default {
       this.$buefy.toast.open({
         message: "Tarea Guardada",
         type: "is-success",
+      });
+    },
+    toastSesion() {
+      //toast de error cuando no se ha iniciado sesion
+      this.$buefy.toast.open({
+        duration: 5000,
+        message: `Primero inicia sesion`,
+        position: "is-bottom",
+        type: "is-danger",
       });
     },
   },

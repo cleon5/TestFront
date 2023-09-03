@@ -14,7 +14,7 @@
         </b-field>
 
         <b-field custom-class="label-white" label="Contrasena">
-          <b-input v-model="data.password"></b-input>
+          <b-input v-model="data.password" type="password"></b-input>
         </b-field>
 
         <b-button type="is-success" @click="AuthUser()">Success</b-button>
@@ -34,8 +34,8 @@ export default {
       err: false,
       urlMocki: "https://mocki.io/v1/3e408794-39ed-4c75-bb6e-c49c578de293", //url para los datos
       data: {
-        userName: "HMHuser",
-        password: "techTest",
+        userName: "",
+        password: "",
       },
     };
   },
@@ -53,6 +53,8 @@ export default {
     loginUser(user) {
       LocalStorageSetUser(user); //Se guarda el usuario en local storage
       this.toastLogin();
+      this.$router.push("/reloj"); //Se redireciona al Timer como primera pagina a checar
+
     },
     toastErr(Tipo) { //Toast de error en datos
       this.$buefy.toast.open({

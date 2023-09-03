@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <Navbar class="Menu"/>
+    <Navbar class="Menu"/> //Utilice un componente menu como navbar
     <router-view class="page"></router-view>
   </div>
 </template>

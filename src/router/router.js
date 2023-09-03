@@ -6,7 +6,7 @@ import TodoList from '../views/TodoList.vue'
 
 export default [
   {path:"/", component:Login}, //El login es la ruta base
-  {path:"/git", component:GitProfile},
-  {path:"/todolist", component:TodoList},
-  {path:"/reloj", component:Reloj}
+  {path:"/git", component:GitProfile}, //ruta para perfiles de git
+  {path:"/todolist", component:TodoList}, //Ruta para la TODO list
+  {path:"/reloj", component:Reloj} //Ruta para el temporizador
 ]

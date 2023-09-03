@@ -25,11 +25,14 @@
     </div>
 
     <div class="Buttons">
-      <b-button type="is-primary" @click="IniciarContador()">{{
-        pausa ?"Continuar" : "Iniciar" 
-      }}</b-button>
-      <b-button type="is-danger" @click="PausarContador()">Pausar</b-button>
-      <b-button type="is-dark" @click="LimpiarContador()">Limpiar</b-button>
+      <b-button
+        :disabled="desactivarBtn ? '' : desactivarBtn"
+        type="is-primary"
+        @click="Iniciar()"
+        >{{ pausa ? "Continuar" : "Iniciar" }}</b-button
+      >
+      <b-button type="is-danger" @click="PausarTemporizador()">Pausar</b-button>
+      <b-button type="is-dark" @click="LimpiarTemporizador()">Limpiar</b-button>
     </div>
   </div>
 </template>
@@ -40,7 +43,7 @@ export default {
   name: "PageReloj",
   data() {
     return {
-      idInterval: 0,
+      desactivarBtn: false,
       tiempoInicio: 0,
       diferenciaTemporal: 0,
       pausa: false, //var de control para conocer si esta en pausa
@@ -58,25 +61,29 @@ export default {
   },
   created() {
     this.comprobarLogin();
-    //this.iniciarCronometro();
   },
   methods: {
     comprobarLogin() {
       //Metodo base para consutar login
       let user = LocalStorageGetUser();
-      !user && this.$router.push("/");
+      if (!user) {
+        this.toastSesion();
+        this.$router.push("/");
+      }
     },
-    IniciarContador() {
+    Iniciar() {
       this.calcularDuracion();
     },
-    PausarContador() {
+    PausarTemporizador() {
       if (this.cronometro > 0) {
         //Solo si en cronometro esta en 0 se ejecutara la pausa
         clearInterval(this.cronometro);
         this.pausa = true;
+        this.desactivarBtn = false; //Habilita boton iniciar
       }
     },
-    LimpiarContador() {
+    LimpiarTemporizador() {
+      this.PausarTemporizador();
       //resetea a 0 el temporizador, cronometro, y se quita la pausa
       this.Timer.segundos = 0;
       this.Timer.minutos = 0;
@@ -84,22 +91,27 @@ export default {
       this.tmpTime.segundos = 0;
       this.pausa = false;
       this.cronometro = 0;
+      clearInterval();
+      this.desactivarBtn = false; //Habilita boton iniciar
     },
 
-    iniciarCronometro() {
-      this.cronometro = setInterval(() => {
-        if (this.Timer.segundos > 0) {
-          this.Timer.segundos--;
-        } else if (this.Timer.minutos > 0) {
-          this.Timer.segundos = 59;
-          this.Timer.minutos--;
-        } else if (this.Timer.horas > 0) {
-          this.Timer.minutos = 59;
-          this.Timer.horas--;
-        }
-      }, 1000); //interval de 1000 ms = 1s
+    iniciarTemporizador() {
+      if (this.pausa || this.cronometro == 0) {
+        this.desactivarBtn = true; //desactiva el boton iniciar
+        //Verifica que este en pausa o el cronometro este en 0
+        this.cronometro = setInterval(() => {
+          if (this.Timer.segundos > 0) {
+            this.Timer.segundos--;
+          } else if (this.Timer.minutos > 0) {
+            this.Timer.segundos = 59;
+            this.Timer.minutos--;
+          } else if (this.Timer.horas > 0) {
+            this.Timer.minutos = 59;
+            this.Timer.horas--;
+          }
+        }, 1000); //interval de 1000 ms = 1s
+      }
     },
-
     calcularDuracion() {
       if (!this.pausa) {
         //se detecta si esta en pausa para no reiniciar el contador
@@ -109,7 +121,16 @@ export default {
         this.Timer.segundos = segundos % 60;
       }
 
-      this.iniciarCronometro();
+      this.tmpTime.segundos > 0 && this.iniciarTemporizador();
+    },
+    toastSesion() {
+      //toast de error cuando falta iniciar sesion
+      this.$buefy.toast.open({
+        duration: 5000,
+        message: `Primero inicia sesion`,
+        position: "is-bottom",
+        type: "is-danger",
+      });
     },
   },
 };

@@ -65,7 +65,7 @@ export default {
     Logout() {
       removeLocalStorage(); //Se remueve el obj de user del local host
       this.toastLogout()
-      this.$router.push("/login"); //Se redireciona al login
+      this.$router.push("/"); //Se redireciona al login
     },
   },
 };

@@ -17,7 +17,6 @@
         >
         </b-input>
       </b-field>
-      <p class="searh-example">Ejemplo cleon5</p>
     </div>
 
     <div class="Profile" v-if="showProfile">
@@ -66,7 +65,7 @@
 
           <hr />
           <b-pagination
-            :total="total"
+            :total="totalRepos"
             v-model="current"
             :range-before="rangeBefore"
             :range-after="rangeAfter"
@@ -106,7 +105,7 @@ export default {
       showProfile: false,
 
       //Datos para la paginacion
-      total: 20,
+
       current: 1,
       perPage: 5,
       rangeBefore: 3,
@@ -134,7 +133,10 @@ export default {
     comprobarLogin() {
       //Metodo inicial para consultar si se inicio sesion
       let user = LocalStorageGetUser();
-      !user && this.$router.push("/");
+      if (!user) {
+        this.toastSesion();
+        this.$router.push("/");
+      }
     },
     async GetUserGit() {
       //Consulta axios obtener el perfil
@@ -164,9 +166,22 @@ export default {
         type: "is-danger",
       });
     },
+    toastSesion() {
+      //toast de error cuando no se ha iniciado sesion
+      this.$buefy.toast.open({
+        duration: 5000,
+        message: `Primero inicia sesion`,
+        position: "is-bottom",
+        type: "is-danger",
+      });
+    },
   },
-  computed: { 
-    paginatedItems() {// varianvle computada que ordena los repositorios en paginas
+  computed: {
+    totalRepos() {
+      return this.GitRepos.length;
+    },
+    paginatedItems() {
+      // varianvle computada que ordena los repositorios en paginas
       let page_number = this.current - 1;
 
       return this.GitRepos.slice(
@@ -235,13 +250,11 @@ export default {
   text-align: center;
   color: rgb(254, 254, 255);
 }
-.name-descrip {
-}
 .name-repo {
   font-size: 1.7rem;
   color: rgb(122, 122, 192);
 }
-.searh-example{
+.searh-example {
   text-align: center;
   color: rgb(127, 128, 129);
 }
