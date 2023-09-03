@@ -10,7 +10,7 @@
           label="Nueva tarea"
           type="is-primary"
           size="is-medium"
-          @click="isCardModalActive = true"
+          @click="AbrirModal()"
         />
       </div>
 
@@ -21,7 +21,19 @@
           :key="index"
         >
           <header class="card-header">
-            <p class="card-header-title">{{ tarea.title }}</p>
+            <div class="tittle-status">
+              <p class="card-header-title">
+                {{ tarea.done ? "Terminada " : "Pendiente" }}
+              </p>
+              <b-icon
+                v-if="tarea.done"
+                
+                pack="fas"
+                icon="check "
+                size="is-large"
+              >
+              </b-icon>
+            </div>
           </header>
           <div class="card-content">
             <div class="content">
@@ -46,16 +58,6 @@
             <p class="modal-card-title">Crear Tarea</p>
           </header>
           <section class="modal-card-body">
-            <b-field label="Title">
-              <b-input
-                type="text"
-                v-model="TmpTarea.title"
-                placeholder="Title"
-                required
-              >
-              </b-input>
-            </b-field>
-
             <b-field label="Tarea">
               <b-input
                 type="textarea"
@@ -93,20 +95,17 @@ export default {
       TmpTarea: {
         //obj temporal que almacena los datos de una tarea, usado para modales.
         id: 0,
-        title: "",
         msg: "",
         done: false,
       },
       List: [
         {
           id: 1231,
-          title: "Fiesta ",
           msg: "Fiesta con los amigos hoy a las 9",
           done: false,
         },
         {
           id: 4333,
-          title: "Sacar la basura",
           msg: "Recuerda sacar la basura temprano",
           done: true,
         },
@@ -126,7 +125,7 @@ export default {
     },
     closeModal() {
       this.isCardModalActive = false;
-      this.CleanModal();
+      //this.CleanModal();
     },
     AddTarea() {
       //Metodo para agregar tareas
@@ -153,13 +152,12 @@ export default {
     },
     EditTarea(id) {
       let tareaEdict = this.List.find((element) => element.id == id); //Se busca en base al id
-      this.TmpTarea = tareaEdict; //Se almacena la tarea encontrada en los datos temporales de tareas
+      this.TmpTarea = Object.assign({}, tareaEdict); //Se almacena la tarea encontrada en los datos temporales de tareas
       this.isCardModalActive = true; // para que se muestre en la modal
     },
     CleanModal() {
       //Metodo para limpiar modal
       this.TmpTarea.id = 0;
-      this.TmpTarea.title = "";
       this.TmpTarea.msg = "";
       this.TmpTarea.done = false;
     },
@@ -199,12 +197,16 @@ export default {
         type: "is-danger",
       });
     },
+    AbrirModal(){
+      this.CleanModal()
+      this.isCardModalActive = true
+    }
   },
   computed: {
     TareasOrdenadas() {
       let tareasTerminadas = this.List.filter((tarea) => tarea.done); //Filtra las tareas terminadas
       let tareasFaltantes = this.List.filter((tarea) => !tarea.done); //Filtra las tareas no terminadas
-      let newList = tareasTerminadas.concat(tareasFaltantes); //concatena ambos
+      let newList = tareasFaltantes.concat(tareasTerminadas); //concatena ambos
       return newList;
     },
   },
@@ -226,6 +228,13 @@ export default {
 }
 .card-done {
   background-color: rgb(111, 185, 102);
+}
+.tittle-status {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding-right: 20px;
 }
 .btn-crear {
   margin: 0 auto;
